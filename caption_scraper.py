@@ -8,16 +8,16 @@ import time
 options = webdriver.ChromeOptions()
 options.add_experimental_option("detach", True)
 driver = webdriver.Chrome(options=options)  
-driver.get("https://www.youtube.com/watch?v=nssOuD9EcVk&ab_channel=RunThat")
-# driver.get("https://www.google.com")
+# driver.get("https://www.youtube.com/watch?v=nssOuD9EcVk&ab_channel=RunThat")
+driver.get("https://www.youtube.com/watch?v=YDfiTGGPYCk&ab_channel=LiveNOWfromFOX")
 
 
-caption_button = driver.find_element(By.CLASS_NAME, "ytp-subtitles-button")
-# print(caption_button)
-caption_button.click()
-print("caption button clicked")
+# caption_button = driver.find_element(By.CLASS_NAME, "ytp-subtitles-button")
+# # print(caption_button)
+# caption_button.click()
+# print("caption button clicked")
 
-play_button = driver.find_element(By.CLASS_NAME, "ytp-large-play-button")
+# play_button = driver.find_element(By.CLASS_NAME, "ytp-large-play-button")
 
 # This one is to handle the play button that can appear in case the video didn't start playing automatically
 try:
@@ -29,7 +29,7 @@ try:
 except TimeoutException:
     print("The video started playing automatically.")
 
-time.sleep(3) # to skip this caption at first: "caption button clicked play button clicked"
+# time.sleep(3) # to skip this caption at first: "English (auto-generated) click  for settings"
 
 caption_container = driver.find_element(By.CLASS_NAME, "ytp-caption-window-container")
 # print(caption_container)
@@ -42,8 +42,9 @@ while True:
             for line in caption_lines:
                 # Extract text from each segment within a line
                 text = line.text
-                print(text) 
-                # caption_lines = caption_container.find_elements(By.CLASS_NAME, "caption-visual-line")
+                if text != last_text:
+                    print(text)
+                    last_text=text
         time.sleep(1.5)
     except:
         print('No caption found')
