@@ -4,6 +4,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
+from kafka import KafkaProducer
 
 def getDriver() -> webdriver.Chrome:
     options = webdriver.ChromeOptions()
@@ -31,16 +32,23 @@ def getCaptionsContainer(driver: webdriver.Chrome) -> WebElement:
     caption_container = driver.find_element(By.CLASS_NAME, "ytp-caption-window-container")
     return caption_container
 
-def getCaptionsLines(caption_container: WebElement) -> WebElement :
+def getCaptionsLines(driver: webdriver.Chrome) -> WebElement:
     """
     Extract all caption lines
     """
-    caption_lines = caption_container.find_elements(By.CLASS_NAME, "caption-visual-line")
-    if len(caption_lines):
-        # Extract text from each a line
-        for line in caption_lines:
-            text = line.text
-            if text != last_text:
-                print(text)
-                last_text=text
-    return text
+    caption_lines = driver.find_elements(By.CLASS_NAME, "caption-visual-line")
+    return caption_lines
+
+# def getCaptionsLines(caption_container: WebElement) -> WebElement :
+#     """
+#     Extract all caption lines
+#     """
+#     caption_lines = caption_container.find_elements(By.CLASS_NAME, "caption-visual-line")
+#     if len(caption_lines):
+#         # Extract text from each a line
+#         for line in caption_lines:
+#             text = line.text
+#             if text != last_text:
+#                 print(text)
+#                 last_text=text
+#     return text
