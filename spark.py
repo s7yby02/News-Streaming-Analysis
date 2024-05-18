@@ -22,7 +22,7 @@ def createKafkaSession(spark_session):
             .format('kafka') \
             .option('kafka.bootstrap.servers', 'localhost:9092') \
             .option('subscribe', 'captions') \
-            .option('startingOffsets', 'earliest') \
+            .option('startingOffsets', 'earliest')\
             .load()
         print("kafka dataframe created successfully")
     except Exception as e:
@@ -44,14 +44,15 @@ if __name__ == '__main__':
             print("Kafka connection is active")
 
             k_conn = k_conn.selectExpr("CAST(value AS STRING)")
+            print("data is read!!!!!!!!!!!!!")
 
             processed_df = k_conn.withColumn("value", expr("upper(value)"))  # Example transformation
-
+            print("Data is processed!!!!!!!!!!!!!!!!!!!!!!")
             # Write the stream to the console (or any other sink)
             query = processed_df.writeStream \
                 .outputMode("append") \
                 .format("console") \
                 .start()
-
+            print("QUERYYYYYYYYY DOOONE")
             query.awaitTermination()
 
