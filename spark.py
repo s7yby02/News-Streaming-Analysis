@@ -1,5 +1,5 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, expr
+from pyspark.sql.functions import expr
 
 def createSparkSession():
     s_conn = None
@@ -9,6 +9,7 @@ def createSparkSession():
             .config('spark.jars.packages',"org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1") \
             .getOrCreate()
         # s_conn.sparkContext.setLogLevel("WARN")
+        s_conn.sparkContext.setLogLevel("ERROR")
         print("GOAAAAAAAAAAAAAAAAAAAAAAAAAL\nSpark Session Created")
     except Exception as e:
         print("TFUUUUUUUUUUUUUUUUUUU")
@@ -55,4 +56,3 @@ if __name__ == '__main__':
                 .start()
             print("QUERYYYYYYYYY DOOONE")
             query.awaitTermination()
-

@@ -1,4 +1,3 @@
-from selenium.webdriver.common.by import By
 import time
 from functions import *
 from kafka import KafkaProducer
@@ -7,8 +6,7 @@ from kafka import KafkaProducer
 driver = getDriver()
 
 # Going to the link
-# link = "https://www.youtube.com/watch?v=gCNeDWCI0vo&ab_channel=AlJazeeraEnglish"
-link = "https://www.youtube.com/watch?v=YDfiTGGPYCk&ab_channel=LiveNOWfromFOX"
+link = "https://www.youtube.com/watch?v=gCNeDWCI0vo&ab_channel=AlJazeeraEnglish"
 goToLink(link, driver)
 
 playButton(driver)
