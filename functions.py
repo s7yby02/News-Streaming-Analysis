@@ -4,7 +4,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
-from kafka import KafkaProducer
+from pymongo import MongoClient
+from pymongo.collection import Collection
+from pymongo.errors import ServerSelectionTimeoutError
 
 def getDriver() -> webdriver.Chrome:
     options = webdriver.ChromeOptions()
@@ -39,16 +41,18 @@ def getCaptionsLines(driver: webdriver.Chrome) -> WebElement:
     caption_lines = driver.find_elements(By.CLASS_NAME, "caption-visual-line")
     return caption_lines
 
-# def getCaptionsLines(caption_container: WebElement) -> WebElement :
-#     """
-#     Extract all caption lines
-#     """
-#     caption_lines = caption_container.find_elements(By.CLASS_NAME, "caption-visual-line")
-#     if len(caption_lines):
-#         # Extract text from each a line
-#         for line in caption_lines:
-#             text = line.text
-#             if text != last_text:
-#                 print(text)
-#                 last_text=text
-#     return text
+def establish_mongodb_connection(database: str, collection: str) -> Collection:
+    """
+    Establishes a connection to the MongoDB localhost server and returns a Collection instance.
+    """
+    try:
+        client = MongoClient("mongodb://localhost:27017") # Establish a mongodb connection
+        client.server_info()  # Try to get server info to check the connection
+    except ServerSelectionTimeoutError:
+        print("Failed to connect to MongoDB. Please check your connection.")
+        return None, None
+        
+    db = client[database]                              # Create a database
+    collection = db[collection]                        # Create a collection
+
+    return collection
