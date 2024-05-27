@@ -32,7 +32,7 @@ def scrap_chat_into_mongodb(url: str, collection) -> None:
     for index, message in enumerate(chat):
         collection.insert_one(message)
         # time.sleep(1)
-        print(f"{index + 1} chat documenet has been added to the database")
+        print(f"{index + 1} chat documents has been added to the database")
 
 
 def extract_chat_from_object(object: dict) -> str:

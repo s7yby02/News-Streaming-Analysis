@@ -8,11 +8,12 @@ def createSparkSession():
         s_conn = SparkSession.builder.appName("pfa Spark")\
             .config('spark.jars.packages',"org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1") \
             .getOrCreate()
-        # s_conn.sparkContext.setLogLevel("WARN")
-        s_conn.sparkContext.setLogLevel("ERROR")
+            # .master("spark://localhost:7077")\
+        s_conn.sparkContext.setLogLevel("WARN")
+        # s_conn.sparkContext.setLogLevel("ERROR")
         print("GOAAAAAAAAAAAAAAAAAAAAAAAAAL\nSpark Session Created")
     except Exception as e:
-        print("TFUUUUUUUUUUUUUUUUUUU")
+        print(f"TFUUUUUUUUUUUUUUUUUUU ---> {e}")
 
     return s_conn
 
@@ -23,8 +24,8 @@ def createKafkaSession(spark_session):
             .format('kafka') \
             .option('kafka.bootstrap.servers', 'localhost:9092') \
             .option('subscribe', 'captions') \
-            .option('startingOffsets', 'earliest')\
             .load()
+            # .option('startingOffsets', 'earliest') \
         print("kafka dataframe created successfully")
     except Exception as e:
         print(f"kafka dataframe could not be created because: {e}")
@@ -51,8 +52,14 @@ if __name__ == '__main__':
             print("Data is processed!!!!!!!!!!!!!!!!!!!!!!")
             # Write the stream to the console (or any other sink)
             query = processed_df.writeStream \
-                .outputMode("append") \
+                .outputMode("update") \
                 .format("console") \
                 .start()
-            print("QUERYYYYYYYYY DOOONE")
+                # .trigger(processingTime='30 seconds')\
+            print("QUERYYYYYYYYY DOOONE\nStreaming query started")
             query.awaitTermination()
+            print("Query finished")
+        else:
+            print("Failed to create Kafka connection")
+    else:
+        print("Failed to create Spark session")

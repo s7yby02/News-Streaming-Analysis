@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Live Stream and Chat Analysis</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>YouTube Live Stream and Chat Analysis</h1>
+        </header>
+        <main>
+            <div class="input-container">
+                <label for="youtube-link">Paste YouTube Live Stream Link:</label>
+                <input type="text" id="youtube-link" placeholder="Enter YouTube live link here...">
+                <button onclick="loadLiveStream()">Load Stream</button>
+            </div>
+            <div class="content">
+                <div class="video-container">
+                    <iframe id="youtube-live" width="560" height="315" src="" frameborder="0" allow="autoplay" allowfullscreen></iframe>
+                </div>
+                <div class="chat-analysis">
+                    <h2>Chat Sentiment Analysis</h2>
+                    <div id="sentiment-analysis">
+                        <!-- Chat sentiment analysis will appear here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function loadLiveStream() {
+            const linkInput = document.getElementById('youtube-link').value;
+            const youtubeIframe = document.getElementById('youtube-live');
+            if (linkInput) {
+                const videoId = extractVideoId(linkInput);
+                youtubeIframe.src = `https://www.youtube.com/embed/${videoId}`;
+                
+                // Send the link to the Flask app to start the scraper
+                $.ajax({
+                    type: "POST",
+                    url: "/start_scraper",
+                    contentType: "application/json",
+                    data: JSON.stringify({ link: linkInput }),
+                    success: function(response) {
+                        console.log(response.message);
+                    },
+                    error: function(error) {
+                        console.error("Error starting scraper:", error.responseJSON.error);
+                    }
+                });
+            }
+        }
+
+        
+        
+        function extractVideoId(url) {
+            const regex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+            const matches = url.match(regex);
+            return matches ? matches[1] : null;
+        }
+        // function loadLiveStream() {
+        //     const linkInput = document.getElementById('youtube-link').value;
+        //     const youtubeIframe = document.getElementById('youtube-live');
+        //     if (linkInput) {
+        //         const videoId = extractVideoId(linkInput);
+        //         youtubeIframe.src = `https://www.youtube.com/embed/${videoId}`;
+        //     }
+        // }
+    </script>
+</body>
+</html>
