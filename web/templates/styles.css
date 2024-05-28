@@ -63,7 +63,7 @@ header h1 {
 .content {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .video-container {
@@ -73,7 +73,7 @@ header h1 {
 
 .chat-analysis {
     flex: 1;
-    padding: 20px;
+    padding: 10px;
     border: 1px solid #cccccc;
     border-radius: 4px;
     background-color: #f1f1f1;
@@ -83,11 +83,14 @@ header h1 {
     font-size: 1.5rem;
     color: #333333;
     margin-bottom: 20px;
+    margin-top: 5px;
+    text-align: center;
 }
 
-#sentiment-analysis {
-    font-size: 1rem;
-    color: #333333;
-    overflow-y: auto;
-    max-height: 400px;
+
+canvas {
+    width: 400px;
+    height: 400px;
+    box-shadow: 0px 0px 10px 2px black; 
+    background-color: aqua;
 }
